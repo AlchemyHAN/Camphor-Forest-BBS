@@ -49,9 +49,7 @@ export default function SignIn() {
             .then(response => {
                 console.log(response.cookies.get("doorKey"));
                 console.log("test");
-                if (response.cookies.get("doorKey") !== null) {
-                    const token = response.headers.getAuthorization();
-                    localStorage.setItem('doorKey', token);
+                if ( response.headers.get("1235d6") === "true") {
                     console.log("登录成功！");
                     console.log(token);
                 } else {
