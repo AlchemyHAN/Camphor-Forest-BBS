@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
+import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -13,21 +13,39 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import service from "@/api/service";
 import {useState} from "react";
+import CssBaseline from '@mui/material/CssBaseline';
+import List from '@mui/material/List';
+import {Divider, useTheme} from "@mui/material";
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Drawer from "@mui/material/Drawer";
+import ListItem from "@mui/material/ListItem";
+import InboxIcon from "@mui/material/Icon";
+import {mainListItems, secondaryListItems} from "@/components/menulist";
 
 
 const banner = ['提问', '公告', '发现', '关于'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function Navbar({data}) {
+function Navbar({user}) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(data !== null);
+    const [isLoggedIn, setIsLoggedIn] = useState(user !== null);
+    const [open, setOpen] = React.useState(false);
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
+
+    const defaultTheme = createTheme();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
-        console.log(data.toString())
+        console.log(user.toString())
     };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -41,8 +59,67 @@ function Navbar({data}) {
         setAnchorElUser(null);
     };
 
+    const drawerWidth = 240;
+
+    const theme = useTheme();
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
+    const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+        ({ theme, open }) => ({
+            flexGrow: 1,
+            padding: theme.spacing(3),
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+            marginRight: -drawerWidth,
+            ...(open && {
+                transition: theme.transitions.create('margin', {
+                    easing: theme.transitions.easing.easeOut,
+                    duration: theme.transitions.duration.enteringScreen,
+                }),
+                marginRight: 0,
+            }),
+        }),
+    );
+
+    const AppBar = styled(MuiAppBar, {
+        shouldForwardProp: (prop) => prop !== 'open',
+    })(({ theme, open }) => ({
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        ...(open && {
+            width: `calc(100% - ${drawerWidth}px)`,
+            transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginRight: drawerWidth,
+        }),
+    }));
+
+    const DrawerHeader = styled('div')(({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+        justifyContent: 'flex-start',
+    }));
+
     return (
-        <AppBar position="static" sx={{borderRadius: '10px'}}>
+        <ThemeProvider theme={defaultTheme}>
+        <AppBar position="static">
+            <CssBaseline />
             <Container maxWidth="xl">
                 <Toolbar disableGutters >
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -135,33 +212,33 @@ function Navbar({data}) {
                     {isLoggedIn ? (
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="pic" src={data.avatarUrl}/>
+                            <IconButton onClick={toggleDrawer} sx={{ p: 0 }}>
+                                <Avatar alt="pic" src={user.avatarUrl}/>
                             </IconButton>
                         </Tooltip>
-                        <Typography>{data.name}</Typography>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
+
+                        {/*<Menu*/}
+                        {/*    sx={{ mt: '45px' }}*/}
+                        {/*    id="menu-appbar"*/}
+                        {/*    anchorEl={anchorElUser}*/}
+                        {/*    anchorOrigin={{*/}
+                        {/*        vertical: 'top',*/}
+                        {/*        horizontal: 'right',*/}
+                        {/*    }}*/}
+                        {/*    keepMounted*/}
+                        {/*    transformOrigin={{*/}
+                        {/*        vertical: 'top',*/}
+                        {/*        horizontal: 'right',*/}
+                        {/*    }}*/}
+                        {/*    open={Boolean(anchorElUser)}*/}
+                        {/*    onClose={handleCloseUserMenu}*/}
+                        {/*>*/}
+                        {/*    {settings.map((setting) => (*/}
+                        {/*        <MenuItem key={setting} onClick={handleCloseUserMenu}>*/}
+                        {/*            <Typography textAlign="center">{setting}</Typography>*/}
+                        {/*        </MenuItem>*/}
+                        {/*    ))}*/}
+                        {/*</Menu>*/}
                     </Box>
                         ) : (
                         <Button color="inherit" href="/login">登录</Button>
@@ -170,6 +247,33 @@ function Navbar({data}) {
                 </Toolbar>
             </Container>
         </AppBar>
+        <Container>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                    },
+                }}
+                variant="persistent"
+                anchor="right"
+                open={open}
+            >
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <List component="nav">
+                    {mainListItems}
+                    <Divider sx={{ my: 1 }} />
+                    {secondaryListItems}
+                </List>
+            </Drawer>
+        </Container>
+        </ThemeProvider>
     );
 }
 

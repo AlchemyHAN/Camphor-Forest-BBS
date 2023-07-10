@@ -6,13 +6,14 @@ import Navbar from "@/components/navbar";
 export default function Index({data}){
 
     return (
-        <div>{data}</div>
+        <Navbar user={data}></Navbar>
     );
 }
 
 export async function getServerSideProps(context) {
     try {
-        const doorKey = context.req.cookies.get('doorKey');
+        const doorKey = context.req.headers.cookie.split("=")[1];
+        console.log(doorKey);
         const response = await axios.get("/getNavbarInfo", {
             headers: {
                 "Cookie": "doorKey="+doorKey

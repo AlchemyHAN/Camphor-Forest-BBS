@@ -5,6 +5,7 @@ import axios from "axios";
 
 axios.defaults.timeout = 10000;
 axios.defaults.baseURL = "http://localhost:8080/";
+axios.defaults.withCredentials = true;
 
 /**
  * Http request 拦截器
@@ -12,7 +13,6 @@ axios.defaults.baseURL = "http://localhost:8080/";
 axios.interceptors.request.use(
     (config) => {
         config.headers.setContentType("application/json");
-        axios.defaults.withCredentials = true;
         return config;
     },
     (error) => {

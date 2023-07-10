@@ -47,11 +47,10 @@ export default function SignIn() {
 
         login(data)
             .then(response => {
-                console.log(response.cookies.get("doorKey"));
+                console.log(response.headers);
                 console.log("test");
                 if ( response.headers.get("1235d6") === "true") {
                     console.log("登录成功！");
-                    console.log(token);
                 } else {
                     console.log("认证失败！");
                     setLoginError("用户名或密码错误！请重试或点击\"忘记密码\"以重置密码");
