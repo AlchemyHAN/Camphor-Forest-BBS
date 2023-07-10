@@ -13,18 +13,21 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import Link from 'next/link';
+import service from "@/api/service";
+import {useState} from "react";
 
 
 const banner = ['提问', '公告', '发现', '关于'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function Navbar() {
+function Navbar({data}) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(data !== null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
+        console.log(data.toString())
     };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -116,6 +119,7 @@ function Navbar() {
                     >
                         西大樟树林论坛
                     </Typography>
+
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {banner.map((page) => (
                             <Button
@@ -127,40 +131,48 @@ function Navbar() {
                             </Button>
                         ))}
                     </Box>
-                    <Link href="/login"><Button color="inherit">登录</Button></Link>
-                    {/*<Box sx={{ flexGrow: 0 }}>*/}
-                    {/*    <Tooltip title="Open settings">*/}
-                    {/*        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>*/}
-                    {/*            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />*/}
-                    {/*        </IconButton>*/}
-                    {/*    </Tooltip>*/}
-                    {/*    <Menu*/}
-                    {/*        sx={{ mt: '45px' }}*/}
-                    {/*        id="menu-appbar"*/}
-                    {/*        anchorEl={anchorElUser}*/}
-                    {/*        anchorOrigin={{*/}
-                    {/*            vertical: 'top',*/}
-                    {/*            horizontal: 'right',*/}
-                    {/*        }}*/}
-                    {/*        keepMounted*/}
-                    {/*        transformOrigin={{*/}
-                    {/*            vertical: 'top',*/}
-                    {/*            horizontal: 'right',*/}
-                    {/*        }}*/}
-                    {/*        open={Boolean(anchorElUser)}*/}
-                    {/*        onClose={handleCloseUserMenu}*/}
-                    {/*    >*/}
-                    {/*        {settings.map((setting) => (*/}
-                    {/*            <MenuItem key={setting} onClick={handleCloseUserMenu}>*/}
-                    {/*                <Typography textAlign="center">{setting}</Typography>*/}
-                    {/*            </MenuItem>*/}
-                    {/*        ))}*/}
-                    {/*    </Menu>*/}
-                    {/*</Box>*/}
+
+                    {isLoggedIn ? (
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="pic" src={data.avatarUrl}/>
+                            </IconButton>
+                        </Tooltip>
+                        <Typography>{data.name}</Typography>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            {settings.map((setting) => (
+                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                    <Typography textAlign="center">{setting}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </Box>
+                        ) : (
+                        <Button color="inherit" href="/login">登录</Button>
+                    )}
 
                 </Toolbar>
             </Container>
         </AppBar>
     );
 }
+
+
+
 export default Navbar;

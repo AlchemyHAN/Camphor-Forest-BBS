@@ -13,13 +13,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from "axios";
+import {useState} from "react";
+import login from "@/api/login";
 
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © J8-116 All Reserved '}
-            <Link color="inherit" href="https://mui.com/">
+            <Link color="inherit" href="https://bbs.swu.social/">
                 bbs.swu.social
             </Link>{' '}
             {new Date().getFullYear()}
@@ -34,6 +35,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+    const [loginError, setLoginError] = useState('');
     const handleSubmit = (event) => {
         event.preventDefault();
         // 创建一个 JSON 对象
@@ -42,21 +44,23 @@ export default function SignIn() {
             account: data.get('account'),
             password: data.get('password'),
         });
-// 发送 POST 请求
-        axios.post('http://localhost:8080/login', data, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+
+        login(data)
             .then(response => {
-                console.log("登陆成功！");
+                console.log(response.cookies.get("doorKey"));
+                console.log("test");
+                if (response.cookies.get("doorKey") !== null) {
+                    const token = response.headers.getAuthorization();
+                    localStorage.setItem('doorKey', token);
+                    console.log("登录成功！");
+                    console.log(token);
+                } else {
+                    console.log("认证失败！");
+                    setLoginError("用户名或密码错误！请重试或点击\"忘记密码\"以重置密码");
+                }
             })
             .catch(error => {
-                if (error.response.status === 401) {
-                    console.log("认证失败！");
-                } else {
-                    error.log(error);
-                }
+                console.log(error);
             });
     };
 
@@ -97,6 +101,8 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            error={Boolean(loginError)}
+                            helperText={loginError}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
