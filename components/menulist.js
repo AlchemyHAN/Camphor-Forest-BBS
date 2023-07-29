@@ -9,9 +9,13 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Cookies from 'js-cookie';
+import {useRouter} from "next/router";
 
+export function MainListItem() {
 
-export const mainListItems = (
+    return (
     <React.Fragment>
         <ListItemButton>
             <ListItemIcon>
@@ -43,11 +47,17 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="Integrations" />
         </ListItemButton>
-    </React.Fragment>
-);
+    </React.Fragment>);
+}
 
 
-export const secondaryListItems = (
+export function SecondaryListItem() {
+    let router = useRouter();
+    const logout = () => {
+        Cookies.remove('doorKey');
+        router.push('/login')
+    }
+    return (
     <React.Fragment>
         <ListSubheader component="div" inset>
             Saved reports
@@ -66,9 +76,9 @@ export const secondaryListItems = (
         </ListItemButton>
         <ListItemButton>
             <ListItemIcon>
-                <AssignmentIcon />
+                <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Year-end sale" />
+            <ListItemText primary="注销" onClick={logout}/>
         </ListItemButton>
     </React.Fragment>
-);
+);}

@@ -7,7 +7,6 @@ export default function Custom1235d6() {
         const fetchData = async () => {
             try {
                 console.log("d6");
-
                 const response = await service("get", '/getNavbarInfo');
                 console.log(response.data.avatarUrl);
             } catch (error) {

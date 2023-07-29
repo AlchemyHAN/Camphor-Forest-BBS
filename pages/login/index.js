@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,8 +12,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import login from "@/api/login";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useRouter } from 'next/router';
 
 function Copyright(props) {
     return (
@@ -35,9 +36,17 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-    const [loginError, setLoginError] = useState('');
+    const [loading, setLoading] = React.useState(false);
+    const [accoutError, setAccountError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const router = useRouter();
+    const clearHelperText = () => {
+        setAccountError('');
+        setPasswordError('');
+    }
     const handleSubmit = (event) => {
         event.preventDefault();
+        setLoading(true);
         // 创建一个 JSON 对象
         const data = new FormData(event.currentTarget);
         console.log({
@@ -45,15 +54,26 @@ export default function SignIn() {
             password: data.get('password'),
         });
 
+        if (data.get('account').trim().length === 0) {
+            setLoading(false);
+            setAccountError("账号不能为空");
+            return;
+        } else if (data.get('password').trim().length === 0) {
+            setLoading(false);
+            setPasswordError("密码不能为空");
+            return;
+        }
         login(data)
             .then(response => {
                 console.log(response.headers);
                 console.log("test");
                 if ( response.headers.get("1235d6") === "true") {
                     console.log("登录成功！");
+                    router.push('/');
                 } else {
                     console.log("认证失败！");
-                    setLoginError("用户名或密码错误！请重试或点击\"忘记密码\"以重置密码");
+                    setPasswordError("用户名或密码错误！请重试或点击\"忘记密码\"以重置密码");
+                    setLoading(false);
                 }
             })
             .catch(error => {
@@ -81,13 +101,16 @@ export default function SignIn() {
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
+                            autoFocus
                             margin="normal"
                             required
                             fullWidth
                             id="account"
                             label="校园账号"
                             name="account"
-                            autoFocus
+                            error={Boolean(accoutError)}
+                            helperText={accoutError}
+                            onChange={clearHelperText}
                         />
                         <TextField
                             margin="normal"
@@ -98,21 +121,24 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            error={Boolean(loginError)}
-                            helperText={loginError}
+                            error={Boolean(passwordError)}
+                            helperText={passwordError}
+                            onChange={clearHelperText}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="记住密码"
                         />
-                        <Button
+                        <LoadingButton
                             type="submit"
-                            fullWidth
+                            loading={loading}
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            fullWidth
                         >
-                            登录
-                        </Button>
+                            <span>登录</span>
+                        </LoadingButton>
+
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -126,4 +152,20 @@ export default function SignIn() {
             </Container>
         </ThemeProvider>
     );
+}
+
+export async function getServerSideProps(context) {
+    if (context.req.cookies['doorKey'] != null) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/',
+            },
+        };
+    }
+    return {
+        props: {
+            status: "Success"
+        }
+    };
 }

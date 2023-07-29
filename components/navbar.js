@@ -20,17 +20,11 @@ import {Divider, useTheme} from "@mui/material";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Drawer from "@mui/material/Drawer";
-import ListItem from "@mui/material/ListItem";
-import InboxIcon from "@mui/material/Icon";
-import {mainListItems, secondaryListItems} from "@/components/menulist";
+import {MainListItem, SecondaryListItem} from "@/components/menulist";
 
 
 const banner = ['提问', '公告', '发现', '关于'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar({user}) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -45,7 +39,6 @@ function Navbar({user}) {
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
-        console.log(user.toString())
     };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -59,7 +52,7 @@ function Navbar({user}) {
         setAnchorElUser(null);
     };
 
-    const drawerWidth = 240;
+    const drawerWidth = 360;
 
     const theme = useTheme();
 
@@ -216,29 +209,6 @@ function Navbar({user}) {
                                 <Avatar alt="pic" src={user.avatarUrl}/>
                             </IconButton>
                         </Tooltip>
-
-                        {/*<Menu*/}
-                        {/*    sx={{ mt: '45px' }}*/}
-                        {/*    id="menu-appbar"*/}
-                        {/*    anchorEl={anchorElUser}*/}
-                        {/*    anchorOrigin={{*/}
-                        {/*        vertical: 'top',*/}
-                        {/*        horizontal: 'right',*/}
-                        {/*    }}*/}
-                        {/*    keepMounted*/}
-                        {/*    transformOrigin={{*/}
-                        {/*        vertical: 'top',*/}
-                        {/*        horizontal: 'right',*/}
-                        {/*    }}*/}
-                        {/*    open={Boolean(anchorElUser)}*/}
-                        {/*    onClose={handleCloseUserMenu}*/}
-                        {/*>*/}
-                        {/*    {settings.map((setting) => (*/}
-                        {/*        <MenuItem key={setting} onClick={handleCloseUserMenu}>*/}
-                        {/*            <Typography textAlign="center">{setting}</Typography>*/}
-                        {/*        </MenuItem>*/}
-                        {/*    ))}*/}
-                        {/*</Menu>*/}
                     </Box>
                         ) : (
                         <Button color="inherit" href="/login">登录</Button>
@@ -247,6 +217,7 @@ function Navbar({user}) {
                 </Toolbar>
             </Container>
         </AppBar>
+            {isLoggedIn &&
         <Container>
             <Drawer
                 sx={{
@@ -256,26 +227,32 @@ function Navbar({user}) {
                         width: drawerWidth,
                     },
                 }}
-                variant="persistent"
+                variant="temporary"
                 anchor="right"
                 open={open}
+                onClose={handleDrawerClose}
             >
-                <DrawerHeader>
+                <DrawerHeader sx={{ display: 'flex', justifyContent: 'space-between'}}>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
+                    <Box sx={{display: 'flex', alignItems: 'center' }}>
+                        <Typography sx={{ display: 'flex', alignItems: 'flex-end'}}>{user.accountId} - {user.name}</Typography>
+                        <IconButton onClick={toggleDrawer} >
+                            <Avatar alt="pic" src={user.avatarUrl} />
+                        </IconButton>
+                    </Box>
                 </DrawerHeader>
                 <Divider />
                 <List component="nav">
-                    {mainListItems}
+                    <MainListItem />
                     <Divider sx={{ my: 1 }} />
-                    {secondaryListItems}
+                    <SecondaryListItem />
                 </List>
             </Drawer>
         </Container>
-        </ThemeProvider>
-    );
-}
+            }
+        </ThemeProvider>)}
 
 
 

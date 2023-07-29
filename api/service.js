@@ -28,7 +28,7 @@ axios.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response.status === 401) {
+        if (error.response.status == 401) {
             console.log("testrouter");
             // 重定向到 401 错误页面
             window.location.href = "/401";
