@@ -1,20 +1,17 @@
 import * as React from "react";
 import axios from "axios";
-import Navbar from "@/components/navbar";
-import RecipeReviewCard from "@/components/RecipeReviewCard";
+import PassageInfoCard from "@/components/PassageInfoCard";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
-export default function Index({navBarData, passageInfoData}) {
+export default function Index({passageInfoData}) {
 
     return (
-        <div>
-            <Navbar user={navBarData}></Navbar>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
 
                 </Grid>
-                <Grid item xs={6} sx={{marginBottom: "300px"}}>
+                <Grid item xs={6}>
                     {passageInfoData.map((passage, index) => (
                         <Box my={1} key={index}>
                             <PassageInfoCard key={index} passageInfo={passage} />
@@ -25,30 +22,13 @@ export default function Index({navBarData, passageInfoData}) {
 
                 </Grid>
             </Grid>
-
-        </div>
     );
 }
 
 export async function getServerSideProps(context) {
-    let data;
-    try {
-        const doorKey = context.req.cookies['doorKey'];
-
-        const response = await axios.get("/getNavbarInfo", {
-            headers: {
-                "Cookie": "doorKey=" + doorKey
-            }
-        });
-        data = response.data;
-    } catch (error) {
-        data = null;
-    }
-        const responsePassageInfo = await axios.post("/getPassageInfo");
-
+        const responsePassageInfo = await axios.post("/passage/getPassageInfo");
         return {
             props: {
-                navBarData: data,
                 passageInfoData: responsePassageInfo.data
             }, // 将响应数据作为属性传递给页面组件
         };

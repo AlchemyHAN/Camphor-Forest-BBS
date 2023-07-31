@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import List from '@mui/material/List';
 import {Divider, useTheme} from "@mui/material";
@@ -21,19 +21,41 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Drawer from "@mui/material/Drawer";
-import {MainListItem, SecondaryListItem} from "@/components/menulist";
+import {MainListItem, SecondaryListItem} from "@/components/Menulist";
+import service from "@/api/service";
+import {log} from "next/dist/server/typescript/utils";
 
 
 const banner = ['提问', '公告', '发现', '关于'];
 
-function Navbar({user}) {
+function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(user !== null);
     const [open, setOpen] = React.useState(false);
+    const [user, setUser] = React.useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const toggleDrawer = () => {
         setOpen(!open);
     };
+
+    useEffect(() => {
+        const doorKeyCookie = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('doorKey='));
+        if (doorKeyCookie) {
+            // 发送请求
+            service("get",'/getNavbarInfo')
+                .then((response) => {
+                    console.log("getNavbarInfo成功");
+                    setUser(response.data);
+                    setIsLoggedIn(true);
+                })
+                .catch((error) => {
+                    console.log("getNavbarInfo错误");
+                    setUser(null);
+                });
+        }
+    }, []);
 
     const defaultTheme = createTheme();
 

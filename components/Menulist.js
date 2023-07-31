@@ -10,7 +10,6 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Cookies from 'js-cookie';
 import {useRouter} from "next/router";
 
 export function MainListItem() {
@@ -54,7 +53,7 @@ export function MainListItem() {
 export function SecondaryListItem() {
     let router = useRouter();
     const logout = () => {
-        Cookies.remove('doorKey');
+        document.cookie = 'doorKey=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         router.push('/login')
     }
     return (
