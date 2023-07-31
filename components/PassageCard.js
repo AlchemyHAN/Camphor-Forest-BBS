@@ -12,36 +12,36 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import moment from "moment";
 
-export default function RecipeReviewCard({passageInfo}) {
-    const date = moment(passageInfo.gmtCreate * 1000);
+export default function PassageCard({Passage}) {
+    const date = moment(1);
     const formattedDate = date.format('YYYY-MM-DD HH:mm');
 
     return (
         <Card>
             <CardHeader
                 avatar={
-                    <Avatar src={passageInfo.avatarUrl}></Avatar>
+                    <Avatar src="https://picx.zhimg.com/80/v2-1e013030628fe38046c8b08ed15e1e7f_1440w.webp"></Avatar>
                 }
                 action={
                     <IconButton aria-label="settings">
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={passageInfo.name}
+                title="用户名"
                 subheader={formattedDate}
             />
-            {passageInfo.thumb != null &&
-            <CardMedia
-                component="img"
-                height="194"
-                image={passageInfo.thumb}
-            />}
+            {/*{passageInfo.thumbnailUrl != null &&*/}
+            {/*    <CardMedia*/}
+            {/*        component="img"*/}
+            {/*        height="194"*/}
+            {/*        image={passageInfo.thumbnailUrl}*/}
+            {/*    />}*/}
             <CardContent>
                 <Typography variant="h5">
-                    {passageInfo.title}
+                    标题
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {passageInfo.description}
+                    描述
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>

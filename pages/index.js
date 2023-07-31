@@ -17,7 +17,7 @@ export default function Index({navBarData, passageInfoData}) {
                 <Grid item xs={6} sx={{marginBottom: "300px"}}>
                     {passageInfoData.map((passage, index) => (
                         <Box my={1} key={index}>
-                            <RecipeReviewCard key={index} passageInfo={passage} />
+                            <PassageInfoCard key={index} passageInfo={passage} />
                         </Box>
                     ))}
                 </Grid>
