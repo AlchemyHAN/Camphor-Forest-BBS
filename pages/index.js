@@ -26,10 +26,25 @@ export default function Index({passageInfoData}) {
 }
 
 export async function getServerSideProps(context) {
-        const responsePassageInfo = await axios.post("/passage/getPassageInfo");
+    const doorKey = context.req.cookies['doorKey'];
+
+    if (doorKey == null) {
         return {
-            props: {
-                passageInfoData: responsePassageInfo.data
-            }, // 将响应数据作为属性传递给页面组件
+            redirect: {
+                permanent: false,
+                destination: '/login',
+            },
         };
+    }
+
+    const responsePassageInfo = await axios.post("/passage/articleList", "", {
+        headers: {
+            "Cookie": "doorKey=" + doorKey
+        }
+    });
+    return {
+        props: {
+            passageInfoData: responsePassageInfo.data
+        }, // 将响应数据作为属性传递给页面组件
+    };
 }
