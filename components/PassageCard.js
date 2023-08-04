@@ -11,6 +11,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import moment from "moment";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 export default function PassageCard({Passage}) {
     const date = moment(1);
@@ -18,18 +20,6 @@ export default function PassageCard({Passage}) {
 
     return (
         <Card>
-            <CardHeader
-                avatar={
-                    <Avatar src="https://picx.zhimg.com/80/v2-1e013030628fe38046c8b08ed15e1e7f_1440w.webp"></Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title="用户名"
-                subheader={formattedDate}
-            />
             {/*{passageInfo.thumbnailUrl != null &&*/}
             {/*    <CardMedia*/}
             {/*        component="img"*/}
@@ -37,12 +27,25 @@ export default function PassageCard({Passage}) {
             {/*        image={passageInfo.thumbnailUrl}*/}
             {/*    />}*/}
             <CardContent>
-                <Typography variant="h5">
-                    标题
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    描述
-                </Typography>
+                <Grid container sx={{'--Grid-borderWidth': '3px',
+                    borderTop: 'var(--Grid-borderWidth) solid',
+                    borderLeft: 'var(--Grid-borderWidth) solid',
+                    borderColor: 'red',
+                    '& > div': {
+                        borderRight: 'var(--Grid-borderWidth) solid',
+                        borderBottom: 'var(--Grid-borderWidth) solid',
+                        borderColor: 'red',
+                    },}}>
+                    <Grid item xs={2}>
+                        <Box display="flex"
+                             justifyContent="center">
+                            <Avatar
+                                src="https://picx.zhimg.com/80/v2-1e013030628fe38046c8b08ed15e1e7f_1440w.webp"
+                                sx={{ width: 128, height: 128, textAlign: "center"}}/>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={10}><Typography variant="h4"><Box component="span" fontWeight='fontWeightMedium'>啊十九大莱克斯顿</Box></Typography></Grid>
+                </Grid>
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">

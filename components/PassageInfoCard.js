@@ -11,6 +11,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import moment from "moment";
+import Link from "@mui/material/Link";
 
 export default function PassageInfoCard({passageInfo}) {
     const date = moment(passageInfo.gmtCreate * 1000);
@@ -38,7 +39,9 @@ export default function PassageInfoCard({passageInfo}) {
             />}
             <CardContent>
                 <Typography variant="h5">
-                    {passageInfo.title}
+                    <Link style={{color: 'black', textDecoration: 'none'}} href={`/passage/${encodeURIComponent(passageInfo.id)}`}>
+                        {passageInfo.title}
+                    </Link>
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     {passageInfo.description}
