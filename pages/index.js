@@ -37,7 +37,7 @@ export async function getServerSideProps(context) {
         };
     }
 
-    const responsePassageInfo = await axios.post("/passage/articleList", "", {
+    const responsePassageInfo = await axios.get("/passage/articleList", {
         headers: {
             "Cookie": "doorKey=" + doorKey
         }
